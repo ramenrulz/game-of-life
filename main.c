@@ -8,13 +8,15 @@
 int *init_universe(int max_cols,int max_rows) 
 {
   int i,k;
+  int *universe = NULL;
   srand(time(NULL));
-  int *universe = malloc(max_cols*max_rows*sizeof(int));
+  if((universe = malloc(max_cols*max_rows*sizeof(int))) == NULL) {
+    return NULL;
+  }
 
   for (i = 0; i < max_cols; i++) {
     for (k = 0; k < max_rows; k++) {
       universe[max_rows*i + k] = rand() % 2;
-      //mvaddch(k,i,'*');
     }
   }
 
@@ -74,7 +76,10 @@ int *update_universe(int *universe, int max_cols, int max_rows)
 {
   int i,k;
   int neighbors;
-  int *new_universe = malloc(max_cols*max_rows*sizeof(int));
+  int *new_universe = NULL;
+  if((new_universe = malloc(max_cols*max_rows*sizeof(int))) == NULL) {
+    return NULL;
+  }
 
   for (i = 0; i < max_cols; i++) {
     for (k = 0; k < max_rows; k++) {
@@ -111,6 +116,7 @@ int *update_universe(int *universe, int max_cols, int max_rows)
 
           new_universe[max_rows*i + k] = ALIVE; 
         }else {
+          //dead
           attron(COLOR_PAIR(BLACK_BLACK));
           mvaddch(k,i,' ');
           attroff(COLOR_PAIR(BLACK_BLACK));
@@ -135,7 +141,7 @@ int init_curses(void)
     exit(1);
   }
 
-  start_color();
+  start_color();        // enable color
   init_pair(RED_RED,COLOR_RED,COLOR_RED);
   init_pair(YELLOW_YELLOW,COLOR_YELLOW,COLOR_YELLOW);
   init_pair(GREEN_GREEN,COLOR_GREEN,COLOR_GREEN);
